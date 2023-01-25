@@ -2,7 +2,7 @@
 
 ## 如何使用
 
-+ 把文件扔到cloudflare文件夹里，新建个now_IP.csv, 设置在代码最底层  
++ 把文件扔到cloudflareST文件夹里(github直接搜)，新建个now_IP.csv, 设置在代码最底层  
 + 计划任务用powershell加参数
 
     Powershell -path path
