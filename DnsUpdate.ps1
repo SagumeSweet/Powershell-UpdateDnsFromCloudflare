@@ -1,3 +1,8 @@
+Param(
+    [Parameter(Mandatory=$true, Position=0)]
+    [string]$CloudflarePath
+)
+
 # 获取新dns记录对象
 function getNewDnsRecord {
     param (
@@ -68,22 +73,22 @@ function updateDnsRecord {
 
 function getNewIP {
     # ipv4 输出的文件
-    $path = ".\result.csv"
-    Get-Content $path | Select-Object -Skip 1 | Set-Content .\result1.csv
-    $ipTable = Import-Csv -Path .\result1.csv -Header 'ipaddress'
+    $path = "$CloudflarePath\result.csv"
+    Get-Content $path | Select-Object -Skip 1 | Set-Content "$CloudflarePath\result1.csv"
+    $ipTable = Import-Csv -Path "$CloudflarePath\result1.csv" -Header 'ipaddress'
     $bestIP = @{ipv4 = $ipTable.ipaddress[0]}
     # ipv6 输出的文件
-    $path = ".\ipv6result.csv"
-    Get-Content $path | Select-Object -Skip 1 | Set-Content .\result1.csv
-    $ipTable = Import-Csv -Path .\result1.csv -Header 'ipaddress'
+    $path = "$CloudflarePath\ipv6result.csv"
+    Get-Content $path | Select-Object -Skip 1 | Set-Content "$CloudflarePath\result1.csv"
+    $ipTable = Import-Csv -Path "$CloudflarePath\result1.csv" -Header 'ipaddress'
     $bestIP["ipv6"] = $ipTable.ipaddress[0]
 
-    Remove-Item .\result1.csv
+    Remove-Item "$CloudflarePath\result1.csv"
     return $bestIP
 }
 
 function getOldIP {
-    $ipTable = Import-Csv -Path .\now_IP.csv # 当前IP的文件
+    $ipTable = Import-Csv -Path "$CloudflarePath\now_IP.csv" # 当前IP的文件
     $ipDic = @{ipv4 = $ipTable.IPv4; ipv6 = $ipTable.IPv6}
     return $ipDic
 }
@@ -95,7 +100,7 @@ function updateOldIP {
     $ipv6 = $ipDic["ipv6"]
     $ipv4 = $ipDic["ipv4"]
 
-    $path = ".\now_IP.csv"
+    $path = "$CloudflarePath\now_IP.csv"
     $ipTable = Import-Csv -Path $path
     $ipTable.IPv6 = $ipv6
     $ipTable.IPv4 = $ipv4
@@ -203,12 +208,9 @@ function getZoneList {
     return $zoneList
 }
 
-# 环境
-D:;Set-Location 'D:\Program Files\CloudflareST'
-
 # 执行cloudflareST
-Start-Process -FilePath ".\ipv6 Start.bat" -Wait
-Start-Process -FilePath ".\Start.bat" -Wait
+Start-Process -FilePath "$CloudflarePath\ipv6 Start.bat" -Wait
+Start-Process -FilePath "$CloudflarePath\Start.bat" -Wait
 
 $zoneList = getZoneList
 $bestIPDic = getNewIP
