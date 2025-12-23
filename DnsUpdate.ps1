@@ -1,6 +1,8 @@
 Param(
     [Parameter(Mandatory=$true, Position=0)]
-    [string]$CloudflarePath
+    [string]$CloudflarePath,
+    [Parameter(Mandatory=$true, Position=1)]
+    [string]$DownloadUrl
 )
 
 # 获取新dns记录对象
@@ -209,8 +211,8 @@ function getZoneList {
 }
 
 # 执行cloudflareST
-Start-Process -FilePath "$CloudflarePath\ipv6 Start.bat" -Wait
-Start-Process -FilePath "$CloudflarePath\Start.bat" -Wait
+& "$CloudflarePath\cfst.exe" -o result.csv -n 1000 -url $DownloadUrl -p 0
+& "$CloudflarePath\cfst.exe" -f ipv6.txt -o ipv6result.csv -n 1000 -url $DownloadUrl -p 0
 
 $zoneList = getZoneList
 $bestIPDic = getNewIP
