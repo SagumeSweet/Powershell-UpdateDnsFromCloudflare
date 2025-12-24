@@ -211,8 +211,8 @@ function getZoneList {
 }
 
 # 执行cloudflareST
-& "$CloudflarePath\cfst.exe" -o result.csv -n 1000 -url $DownloadUrl -p 0
-& "$CloudflarePath\cfst.exe" -f ipv6.txt -o ipv6result.csv -n 1000 -url $DownloadUrl -p 0
+& "$CloudflarePath\cfst.exe" -f $CloudflarePath\ip.txt-o result.csv -n 1000 -url $DownloadUrl -p 0
+& "$CloudflarePath\cfst.exe" -f $CloudflarePath\ipv6.txt -o ipv6result.csv -n 1000 -url $DownloadUrl -p 0
 
 $zoneList = getZoneList
 $bestIPDic = getNewIP
